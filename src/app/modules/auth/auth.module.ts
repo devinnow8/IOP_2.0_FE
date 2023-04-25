@@ -6,6 +6,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthService } from '@app/core/servcies/auth.service';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,9 @@ import { InputTextModule } from 'primeng/inputtext';
     AuthRoutingModule,
     ButtonModule,
     InputTextModule
+  ],
+  providers: [
+    AuthService
   ]
 })
 export class AuthModule { }

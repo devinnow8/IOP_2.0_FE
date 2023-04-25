@@ -1,0 +1,115 @@
+<div class="p-3">
+  <form [formGroup]="invoiceForm" (ngSubmit)="save($event)">
+
+    <div class="card">
+      <p-panel header="Merchant">
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="merchant">Select Merchant</label>
+            <div class="p-fluid">
+              <p-dropdown id="merchant" [options]="[]" formControlName="merchant" optionLabel="name"></p-dropdown>
+            </div>
+          </div>
+          <div class="field col-4">
+            <label for="merchant_service">Services</label>
+            <div class="p-fluid">
+              <p-dropdown id="merchant_service" [options]="services" formControlName="merchant_service" optionLabel="name" optionValue="value" [autoDisplayFirst]="false"></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </p-panel>
+    </div>
+
+    <div class="card mt-5">
+      <p-panel header="Applicant Details">
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="applicant_first_name">First Name</label>
+            <input class="w-full" id="applicant_first_name" type="text" pInputText formControlName="applicant_first_name" />
+          </div>
+          <div class="field col-4">
+            <label for="applicant_last_name">Last Name</label>
+            <input class="w-full" id="applicant_last_name" type="text" pInputText formControlName="applicant_last_name" />
+          </div>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="applicant_email">Email</label>
+            <input class="w-full" id="applicant_email" type="text" pInputText formControlName="applicant_email" />
+          </div>
+          <div class="field col-4">
+            <label for="applicant_phone_number">Mobile Number</label>
+            <input class="w-full" id="applicant_phone_number" type="text" pInputText formControlName="applicant_phone_number" />
+          </div>
+        </div>
+
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="applicant_nationality">Nationality</label>
+            <input class="w-full" id="applicant_nationality" type="text" pInputText formControlName="applicant_nationality" />
+          </div>
+        </div>
+      </p-panel>
+    </div>
+
+    <div class="card mt-5">
+      <p-panel header="Processing Centre">
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="processing_country">Country</label>
+            <div class="p-fluid">
+              <p-dropdown id="processing_country" [options]="[]" formControlName="processing_country" optionLabel="name"></p-dropdown>
+            </div>
+          </div>
+          <div class="field col-4">
+            <label for="processing_center">Processing Centre</label>
+            <div class="p-fluid">
+              <p-dropdown id="processing_center" [options]="[]" formControlName="processing_center"
+                optionLabel="name"></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </p-panel>
+    </div>
+
+    <div class="card mt-5">
+      <p-panel header="Fees">
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="service_fee">Service Fee</label>
+            <input class="w-full" id="service_fee" type="text" pInputText formControlName="service_fee" />
+          </div>
+          <div class="field col-4">
+            <label for="gateway_fee">Gateway Fee</label>
+            <input class="w-full" id="gateway_fee" type="text" pInputText formControlName="gateway_fee" />
+          </div>
+          <div class="field col-4">
+            <label for="total">Total</label>
+            <input class="w-full" id="total" type="text" pInputText formControlName="total" />
+          </div>
+        </div>
+      </p-panel>
+    </div>
+
+    <div class="card mt-5">
+      <p-panel header="Mode of Payment">
+        <div class="field-radiobutton">
+          <p-radioButton inputId="card" [value]="'card'" formControlName="mode_of_payment"></p-radioButton>
+          <label for="card" class="ml-2">Card</label>
+        </div>
+        <div class="field-radiobutton">
+          <p-radioButton inputId="pos" [value]="'pos'" formControlName="mode_of_payment"></p-radioButton>
+          <label for="pos" class="ml-2">POS</label>
+        </div>
+      </p-panel>
+    </div>
+
+    <div class="mt-5">
+      <button pButton type="submit" label="Save" id="save"></button>
+      <button pButton type="submit" label="Save & Pay" id="saveAndPay" class="ml-5"></button>
+
+    </div>
+
+  </form>
+</div>
