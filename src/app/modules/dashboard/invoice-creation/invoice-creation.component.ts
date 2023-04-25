@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Invoice } from '@app/core/interfaces/invoice';
 import { InvoiceService } from '@app/core/servcies/invoice.service';
 import { MessageService } from 'primeng/api';
@@ -14,8 +15,7 @@ type InvoiceControls = { [key in keyof Invoice]: FormControl<Invoice[key]> };
 @Component({
   selector: 'app-invoice-creation',
   templateUrl: './invoice-creation.component.html',
-  styleUrls: ['./invoice-creation.component.scss'],
-  providers: [MessageService]
+  styleUrls: ['./invoice-creation.component.scss']
 })
 export class InvoiceCreationComponent {
 
@@ -27,6 +27,7 @@ export class InvoiceCreationComponent {
 
   constructor(
     private invoiceService: InvoiceService,
+    private router: Router,
     private messageService: MessageService) {
     this.initForm();
 
@@ -84,6 +85,7 @@ export class InvoiceCreationComponent {
         .subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invoice Created' });
+            this.router.navigate(['/dashboard']);
           }
         });
     }

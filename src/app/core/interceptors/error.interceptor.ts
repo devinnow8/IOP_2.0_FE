@@ -2,30 +2,37 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MessageService } from 'primeng/api';
+import { UserService } from '../servcies/user.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor() { }
+  constructor(
+    private messageService: MessageService,
+    private userService: UserService
+    ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(catchError(err => {
       switch (err.status) {
-        
+
         case 401:
-          alert('Unauthorized Request.');
+          this.userService.removeUser();
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Unauthorized Request.' });
           break;
 
         case 403:
-          alert('Forbidden.');
+          this.userService.removeUser();
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Forbidden.' });
           break;
 
         case 0:
-          alert('HTTP Error Response.');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'HTTP Error Response.' });
           break;
 
         default:
-          alert(err.error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error });
           break;
       }
       console.log(err)
