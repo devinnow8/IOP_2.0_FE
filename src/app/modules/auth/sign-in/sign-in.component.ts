@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from '@app/core/servcies/auth.service';
 import { Router} from '@angular/router';
+import { UserService } from '@app/core/servcies/user.service';
 
 
 @Component({
@@ -15,6 +16,7 @@ export class SignInComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private userService: UserService
   ) {
     this.initForm();
   }
@@ -27,10 +29,10 @@ export class SignInComponent {
     });
   }
 
-  login(event: any) {
+  login() {
     const formData = this.signInForm?.value;
     this.authService.signIn(formData).subscribe({next: (res) => {
-      localStorage.setItem('user', JSON.stringify(res));
+      this.userService.storeUser(res);
       this.router.navigate(['/dashboard'], {replaceUrl:true});
     }})
     

@@ -18,18 +18,11 @@ export class InvoiceService {
     return this.http.post(API.invoice.list, body);
   }
 
-  saveInvoice(data: Invoice) {
-    const payload = {
-      invoiceDTO: data
-    }
+  saveInvoice(payload: Invoice) {
     return this.http.post(API.invoice.save, payload);
   }
 
-  saveAndPayInvoice(data: Invoice) {
-    const payload = {
-      invoiceDTO: data
-    }
-    console.log(payload)
+  saveAndPayInvoice(payload: Invoice) {
     return this.http.post(API.invoice.saveAndPay, payload);
   }
 

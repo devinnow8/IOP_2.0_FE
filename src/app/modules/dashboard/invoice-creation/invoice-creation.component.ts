@@ -90,8 +90,8 @@ export class InvoiceCreationComponent {
   }
 
   changeMerchant(event: any) {
-    console.log(event.value.value)
-    if (event.value.value === 'NIS') {
+    console.log(event.value)
+    if (event.value === 'NIS') {
       this.services = [
         { name: 'Passport', value: 'passport' },
         { name: 'Visa', value: 'visa' },
@@ -106,7 +106,7 @@ export class InvoiceCreationComponent {
   }
 
   changeCountry(event: any) {
-    switch (event.value.value) {
+    switch (event.value) {
       case 'India':
         this.processingCentres = [
           { name: 'New Delhi', value: 'New Delhi' },

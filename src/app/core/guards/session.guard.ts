@@ -5,13 +5,13 @@ import { UserService } from '../servcies/user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard {
+export class SessionGuard {
 
   constructor(private user: UserService, private router: Router) { }
 
   canLoad(): boolean {
-    if (!this.user.isLoggedIn) {
-      this.router.navigate(['/session/sign-in']);
+    if (this.user.isLoggedIn) {
+      this.router.navigate(['/dashboard']);
       return false;
     }
     return true;

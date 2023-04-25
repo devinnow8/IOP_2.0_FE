@@ -8,7 +8,7 @@
             <label for="merchant">Select Merchant</label>
             <div class="p-fluid">
               <p-dropdown id="merchant" [options]="merchant" formControlName="merchant" optionLabel="name"
-                (onChange)="changeMerchant($event)" [autoDisplayFirst]="false"></p-dropdown>
+                (onChange)="changeMerchant($event)" [autoDisplayFirst]="false" optionValue="value"></p-dropdown>
             </div>
           </div>
           <div class="field col-4">
@@ -67,14 +67,14 @@
             <label for="processing_country">Country</label>
             <div class="p-fluid">
               <p-dropdown id="processing_country" [options]="countries" formControlName="processing_country"
-                optionLabel="name" [autoDisplayFirst]="false" (onChange)="changeCountry($event)"></p-dropdown>
+                optionLabel="name" [autoDisplayFirst]="false" (onChange)="changeCountry($event)" optionValue="value"></p-dropdown>
             </div>
           </div>
           <div class="field col-4">
             <label for="processing_center">Processing Centre</label>
             <div class="p-fluid">
               <p-dropdown id="processing_center" [options]="processingCentres" formControlName="processing_center"
-                optionLabel="name" [autoDisplayFirst]="false"></p-dropdown>
+                optionLabel="name" [autoDisplayFirst]="false" optionValue="value"></p-dropdown>
             </div>
           </div>
         </div>

@@ -12,3 +12,10 @@ export interface SignUp {
     password: string,
     last_login: string
 }
+
+export interface User {
+    email: string;
+    jwt: string;
+    name: string;
+    user_id: number;
+}
