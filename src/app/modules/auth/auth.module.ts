@@ -7,6 +7,8 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '@app/core/servcies/auth.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { AuthService } from '@app/core/servcies/auth.service';
     CommonModule,
     AuthRoutingModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     AuthService
