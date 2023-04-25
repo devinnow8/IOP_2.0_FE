@@ -6,9 +6,10 @@
     </div>
     <div class="col-7">
       <div class="flex">
-        <input class="w-full" type="text" placeholder="Search" pInputText [(ngModel)]="search" />
+        <input class="w-full" type="text" placeholder="Search" pInputText [(ngModel)]="search" (keyup.enter)="searchInvoices()" />
         <span class="flex align-items-center -ml-5 text-gray-600">
-          <i class="pi pi-search"></i>
+          <i *ngIf="!search" class="pi pi-search"></i>
+          <i *ngIf="search" class="pi pi-times cursor-pointer" (click)="clearSearch()"></i>
         </span>
         <p-button label="Create" class="ml-5" [routerLink]="['create-invoice']"></p-button>
       </div>
@@ -19,10 +20,10 @@
     <p-table [value]="invoices" [tableStyle]="{ 'min-width': '50rem' }" >
       <ng-template pTemplate="header">
         <tr>
-          <th>Imvoice ID</th>
+          <th>Invoice ID</th>
           <th>Merchant</th>
           <th>Name</th>
-          <th>National</th>
+          <th>Nationality</th>
           <th>Amount</th>
           <th>Status</th>
           <th>Action</th>
@@ -30,12 +31,12 @@
       </ng-template>
       <ng-template pTemplate="body" let-invoice>
         <tr>
-          <td>{{ invoice.id }}</td>
-          <td>{{ invoice.merchant }}</td>
-          <td>{{ invoice.name }}</td>
-          <td>{{ invoice.national }}</td>
-          <td>{{ invoice.amount }}</td>
-          <td>{{ invoice.status }}</td>
+          <td>{{ invoice?.id }}</td>
+          <td>{{ invoice?.merchant }}</td>
+          <td>{{ invoice?.name }}</td>
+          <td>{{ invoice?.national }}</td>
+          <td>{{ invoice?.amount }}</td>
+          <td>{{ invoice?.status }}</td>
           <td>
             <p-button label="Pay Now" styleClass="p-button-rounded p-button-sm p-button-secondary"></p-button>
           </td>

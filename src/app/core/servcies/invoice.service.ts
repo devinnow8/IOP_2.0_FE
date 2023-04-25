@@ -9,9 +9,9 @@ export class InvoiceService {
 
   constructor(private http: HttpRequestService) { }
 
-  getInvoiceList() {
+  getInvoiceList(search?: string) {
     const body = {
-      search: '',
+      search: search || '',
       page_number: 0,
       page_size: 100
     }

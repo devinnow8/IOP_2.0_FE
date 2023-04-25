@@ -10,9 +10,8 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(catchError(err => {
-
       switch (err.status) {
-
+        
         case 401:
           alert('Unauthorized Request.');
           break;
@@ -26,12 +25,12 @@ export class ErrorInterceptor implements HttpInterceptor {
           break;
 
         default:
-          alert(err.error.message);
+          alert(err.error);
           break;
       }
-
-      const error = err.error.message || err.statusText;
-      return throwError(() => new Error(error));
+      console.log(err)
+      const error = err.error || err.status;
+      return throwError(() => error);
     }));
   }
 }

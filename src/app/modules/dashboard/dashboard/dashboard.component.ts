@@ -29,13 +29,23 @@ export class DashboardComponent {
     // this.invoiceList();
   }
 
-  invoiceList() {
-    this.invoiceService.getInvoiceList()
+  invoiceList(search?: string) {
+    this.invoiceService.getInvoiceList(search)
       .subscribe({
         next: (response) => {
           console.log(response)
         }
       });
+  }
+
+  searchInvoices() {
+    console.log(this.search)
+    // this.invoiceList(this.search);
+  }
+
+  clearSearch() {
+    this.search = '';
+    // this.invoiceList();
   }
 
 }
