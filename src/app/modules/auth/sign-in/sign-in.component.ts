@@ -31,7 +31,7 @@ export class SignInComponent {
     const formData = this.signInForm?.value;
     this.authService.signIn(formData).subscribe({next: (res) => {
       localStorage.setItem('user', JSON.stringify(res));
-      this.router.navigate(['/session/dasboard']);
+      this.router.navigate(['/dashboard'], {replaceUrl:true});
     }})
     
   }
