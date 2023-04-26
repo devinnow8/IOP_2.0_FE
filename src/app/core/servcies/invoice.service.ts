@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { API } from '../api';
 import { Invoice } from '../interfaces/invoice';
+import { List } from '../interfaces/list';
 import { HttpRequestService } from './http-request.service';
 
 
@@ -9,12 +10,7 @@ export class InvoiceService {
 
   constructor(private http: HttpRequestService) { }
 
-  getInvoiceList(search?: string) {
-    const body = {
-      search: search || '',
-      page_number: 0,
-      page_size: 100
-    }
+  getInvoiceList(body: List) {
     return this.http.post(API.invoice.list, body);
   }
 

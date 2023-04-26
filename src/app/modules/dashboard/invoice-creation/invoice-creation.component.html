@@ -41,7 +41,8 @@
           <div class="field col-4">
             <label for="applicant_email">Email</label>
             <input class="w-full" id="applicant_email" type="text" pInputText formControlName="applicant_email" />
-            <small class="text-red-600" *ngIf="form['applicant_email'].errors?.['email']">Please enter a valid email.</small>
+            <small class="text-red-600" *ngIf="form['applicant_email'].errors?.['email']">Please enter a valid
+              email.</small>
           </div>
           <div class="field col-4">
             <label for="applicant_phone_number">Mobile Number</label>
@@ -53,8 +54,10 @@
         <div class="formgrid grid">
           <div class="field col-4">
             <label for="applicant_nationality">Nationality</label>
-            <input class="w-full" id="applicant_nationality" type="text" pInputText
-              formControlName="applicant_nationality" />
+            <div class="p-fluid">
+              <p-dropdown id="applicant_nationality" [options]="nationalities" formControlName="applicant_nationality"
+                optionLabel="nationality" [autoDisplayFirst]="false" optionValue="nationality"></p-dropdown>
+            </div>
           </div>
         </div>
       </p-panel>
@@ -67,7 +70,8 @@
             <label for="processing_country">Country</label>
             <div class="p-fluid">
               <p-dropdown id="processing_country" [options]="countries" formControlName="processing_country"
-                optionLabel="name" [autoDisplayFirst]="false" (onChange)="changeCountry($event)" optionValue="value"></p-dropdown>
+                optionLabel="name" [autoDisplayFirst]="false" (onChange)="changeCountry($event)"
+                optionValue="value"></p-dropdown>
             </div>
           </div>
           <div class="field col-4">
@@ -86,15 +90,15 @@
         <div class="formgrid grid">
           <div class="field col-4">
             <label for="service_fee">Service Fee</label>
-            <input class="w-full" id="service_fee" type="number" min="0" pInputText formControlName="service_fee" />
+            <input class="w-full" id="service_fee" type="number" min="0" pInputText formControlName="service_fee" (input)="serviceFeeChange($event)" />
           </div>
           <div class="field col-4">
             <label for="gateway_fee">Gateway Fee</label>
-            <input class="w-full" id="gateway_fee" type="number" min="0" pInputText formControlName="gateway_fee" />
+            <input class="w-full" id="gateway_fee" type="number" min="0" pInputText formControlName="gateway_fee" (input)="gatewayFeeChange($event)" />
           </div>
           <div class="field col-4">
             <label for="total">Total</label>
-            <input class="w-full" id="total" type="number" min="0" pInputText formControlName="total" />
+            <input class="w-full no-pointer-events" id="total" type="number" min="0" pInputText formControlName="total" readonly />
           </div>
         </div>
       </p-panel>
@@ -106,7 +110,7 @@
           <p-radioButton inputId="card" [value]="'card'" formControlName="mode_of_payment"></p-radioButton>
           <label for="card" class="ml-2">Card</label>
         </div>
-        <div class="field-radiobutton">
+        <div class="field-radiobutton disable-radio-btn">
           <p-radioButton inputId="pos" [value]="'pos'" formControlName="mode_of_payment"></p-radioButton>
           <label for="pos" class="ml-2">POS</label>
         </div>
@@ -116,7 +120,6 @@
     <div class="mt-5">
       <button pButton type="submit" label="Save" id="save"></button>
       <button pButton type="submit" label="Save & Pay" id="saveAndPay" class="ml-5"></button>
-
     </div>
 
   </form>

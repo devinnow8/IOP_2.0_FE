@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Nationality } from '@app/core/interfaces/country';
 import { Invoice } from '@app/core/interfaces/invoice';
+import { RazorpayPayment } from '@app/core/interfaces/payment';
 import { InvoiceService } from '@app/core/servcies/invoice.service';
+import { PaymentService } from '@app/core/servcies/payment.service';
+import { Nationalities } from '@app/core/store/nationalities';
 import { MessageService } from 'primeng/api';
 
 interface Dropdown {
@@ -17,19 +21,20 @@ type InvoiceControls = { [key in keyof Invoice]: FormControl<Invoice[key]> };
   templateUrl: './invoice-creation.component.html',
   styleUrls: ['./invoice-creation.component.scss']
 })
-export class InvoiceCreationComponent {
+export class InvoiceCreationComponent implements OnInit {
 
   invoiceForm!: FormGroup<InvoiceControls>;
   merchant: Dropdown[] = [];
   services: Dropdown[] = [];
   countries: Dropdown[] = [];
   processingCentres: Dropdown[] = [];
+  nationalities: Nationality[] = [];
 
   constructor(
     private invoiceService: InvoiceService,
     private router: Router,
-    private messageService: MessageService) {
-    this.initForm();
+    private messageService: MessageService,
+    private paymentService: PaymentService) {
 
     this.merchant = [
       { name: 'NIS', value: 'NIS' },
@@ -41,6 +46,13 @@ export class InvoiceCreationComponent {
       { name: 'USA', value: 'USA' },
       { name: 'UK', value: 'UK' }
     ];
+
+    this.nationalities = Nationalities.sort((a, b) => (a.nationality < b.nationality ? -1 : 1));
+    ;
+  }
+
+  ngOnInit() {
+    this.initForm();
   }
 
   initForm() {
@@ -54,9 +66,9 @@ export class InvoiceCreationComponent {
       applicant_nationality: new FormControl('', { nonNullable: true }),
       processing_center: new FormControl('', { nonNullable: true }),
       processing_country: new FormControl('', { nonNullable: true }),
-      service_fee: new FormControl('', { nonNullable: true }),
-      gateway_fee: new FormControl('', { nonNullable: true }),
-      total: new FormControl('', { nonNullable: true }),
+      service_fee: new FormControl(0, { nonNullable: true }),
+      gateway_fee: new FormControl(0, { nonNullable: true }),
+      total: new FormControl(0, { nonNullable: true }),
       mode_of_payment: new FormControl('', { nonNullable: true })
     });
   }
@@ -69,15 +81,19 @@ export class InvoiceCreationComponent {
     if (this.invoiceForm.invalid) {
       return;
     }
-
-    console.log(event.submitter.id)
-    console.log(this.invoiceForm?.value);
     const formData = this.invoiceForm?.value as Invoice;
     if (event.submitter.id === 'saveAndPay') {
       this.invoiceService.saveAndPayInvoice(formData)
         .subscribe({
-          next: () => {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invoice Created' });
+          next: (response: any) => {
+            const paymentData: RazorpayPayment = {
+              order_id: response.order_id,
+              amount: formData.total,
+              name: `${formData.applicant_first_name} ${formData.applicant_last_name}`,
+              contact: formData.applicant_phone_number,
+              email: formData.applicant_email
+            }
+            this.paymentService.makePayment(paymentData);
           }
         });
     } else {
@@ -92,7 +108,6 @@ export class InvoiceCreationComponent {
   }
 
   changeMerchant(event: any) {
-    console.log(event.value)
     if (event.value === 'NIS') {
       this.services = [
         { name: 'Passport', value: 'passport' },
@@ -136,4 +151,17 @@ export class InvoiceCreationComponent {
     }
   }
 
+  serviceFeeChange(event: any) {
+    const serviceFee = parseFloat(event.target.value);
+    this.invoiceForm.patchValue({
+      total: serviceFee + this.invoiceForm.value.gateway_fee!
+    });
+  }
+
+  gatewayFeeChange(event: any) {
+    const gatewayFee = parseFloat(event.target.value);
+    this.invoiceForm.patchValue({
+      total: gatewayFee + this.invoiceForm.value.service_fee!
+    });
+  }
 }

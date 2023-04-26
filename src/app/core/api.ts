@@ -11,5 +11,11 @@ export const API = {
     signIn: '/user/sign-in',
     signUp: '/user/sign-up',
     resetPassword: (id: number) => `/user/${id}/reset-password`
+  },
+
+  order: {
+    create: '/order/create',
+    confirmPayment: (id: number) => `/order/confirm-payment/${id}`,
+    confirm: '/order/confirm-order'
   }
 }

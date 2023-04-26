@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { PaginatorModule } from 'primeng/paginator';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
@@ -14,6 +15,7 @@ import { LayoutComponent } from './shared/layout/layout.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { InvoiceCreationComponent } from './invoice-creation/invoice-creation.component';
 import { InvoiceService } from '@app/core/servcies/invoice.service';
+import { PaymentService } from '@app/core/servcies/payment.service';
 
 @NgModule({
   declarations: [
@@ -33,9 +35,11 @@ import { InvoiceService } from '@app/core/servcies/invoice.service';
     PanelModule,
     DropdownModule,
     RadioButtonModule,
+    PaginatorModule
   ],
   providers: [
-    InvoiceService
+    InvoiceService,
+    PaymentService
   ]
 })
 export class DashboardModule { }
