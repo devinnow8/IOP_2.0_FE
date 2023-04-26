@@ -6,7 +6,6 @@ interface UserResponse extends User {
   jwt: string;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })

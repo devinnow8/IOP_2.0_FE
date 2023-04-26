@@ -7,8 +7,6 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { OverlayModule } from 'primeng/overlay';
-import { AvatarModule } from 'primeng/avatar';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
@@ -35,8 +33,6 @@ import { InvoiceService } from '@app/core/servcies/invoice.service';
     PanelModule,
     DropdownModule,
     RadioButtonModule,
-    OverlayModule,
-    AvatarModule
   ],
   providers: [
     InvoiceService

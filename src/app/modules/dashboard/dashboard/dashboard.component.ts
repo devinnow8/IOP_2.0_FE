@@ -33,7 +33,9 @@ export class DashboardComponent {
   }
 
   searchInvoices() {
-    this.invoiceList(this.search);
+    this.search = this.search.trim();
+    if (!!this.search)
+      this.invoiceList(this.search);
   }
 
   clearSearch() {
