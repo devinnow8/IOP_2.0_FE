@@ -15,7 +15,6 @@ export interface SignUp {
 
 export interface User {
     email: string;
-    jwt: string;
     name: string;
     user_id: number;
 }
