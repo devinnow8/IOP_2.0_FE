@@ -12,4 +12,28 @@ export interface Invoice {
   gateway_fee: number;
   total: number;
   mode_of_payment: string;
+  currency: string;
+  invoice_id: string;
+}
+
+export interface Service {
+  serviceId: number;
+  service: string;
+}
+
+export interface Merchant {
+  id: number;
+  merchant: string;
+  services: Service[]
+}
+
+export interface ProcessingCentre {
+  centerId: number;
+  centerName: string;
+}
+
+export interface ProcessingCountry {
+  id: number;
+  name: string;
+  centers: ProcessingCentre[]
 }

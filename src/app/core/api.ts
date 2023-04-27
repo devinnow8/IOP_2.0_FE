@@ -17,5 +17,13 @@ export const API = {
     create: '/order/create',
     confirmPayment: (id: number) => `/order/confirm-payment/${id}`,
     confirm: '/order/confirm-order'
+  },
+
+  merchant: {
+    list: '/merchant-list'
+  },
+
+  centre: {
+    list: '/center-list'
   }
 }

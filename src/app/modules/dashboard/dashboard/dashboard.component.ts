@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Invoice } from '@app/core/interfaces/invoice';
-import { RazorpayPayment } from '@app/core/interfaces/payment';
+import { Payment } from '@app/core/interfaces/payment';
 import { InvoiceService } from '@app/core/servcies/invoice.service';
 import { PaymentService } from '@app/core/servcies/payment.service';
+import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
 interface InvoiceList extends Invoice {
   invoiceId: string;
   created_date: string;
   updated_date: string;
+  status: string;
 }
 
 @Component({
@@ -27,6 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private invoiceService: InvoiceService,
+    private messageService: MessageService,
     private paymentService: PaymentService) { }
 
   ngOnInit() {
@@ -37,7 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   invoiceList() {
     const body = {
       search: this.search || '',
-      page_number: (this.first/this.rows) + 1,
+      page_number: (this.first / this.rows) + 1,
       page_size: this.rows
     }
     this.invoiceService.getInvoiceList(body)
@@ -52,25 +55,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   searchInvoices() {
     this.search = this.search.trim();
-    if (!!this.search)
+    if (!!this.search) {
+      this.first = 0;
       this.invoiceList();
+    }
   }
 
   clearSearch() {
+    this.first = 0;
     this.search = '';
     this.invoiceList();
   }
 
   payNow(invoice: InvoiceList) {
-    this.paymentService.createOrder({ invoice_id: invoice.invoiceId })
+    if (invoice.status !== 'Pending') {
+      return;
+    }
+    if (invoice.total <= 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Invalid Amount', detail: 'Amount must not be 0' });
+      return;
+    }
+    this.paymentService.createOrder({ invoice_id: invoice.invoiceId, currency: invoice.currency })
       .subscribe({
         next: (response: any) => {
-          const paymentData: RazorpayPayment = {
+          const paymentData: Payment = {
             order_id: response.order_id,
+            invoice_id: invoice.invoice_id,
             amount: invoice.total,
             name: `${invoice.applicant_first_name} ${invoice.applicant_last_name}`,
             contact: invoice.applicant_phone_number,
-            email: invoice.applicant_email
+            email: invoice.applicant_email,
+            gateway: invoice.processing_country === 'India' ? 'razorpay' : 'stripe'
           }
           this.paymentService.makePayment(paymentData);
         }
@@ -89,6 +104,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.first = event.first;
     this.rows = event.rows;
     this.invoiceList();
+  }
+
+  searchInput(event: any) {
+    const searchText = event.target.value;
+    if (!searchText) {
+      this.first = 0;
+      this.invoiceList();
+    }
   }
 
   ngOnDestroy(): void {

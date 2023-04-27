@@ -31,9 +31,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'HTTP Error Response.' });
           break;
 
-        // default:
-        //   this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error });
-        //   break;
+        default:
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error });
+          break;
       }
       console.log(err)
       const error = err.error || err.status;

@@ -6,7 +6,7 @@
     </div>
     <div class="col-7">
       <div class="flex">
-        <input class="w-full" type="text" placeholder="Search" pInputText [(ngModel)]="search"
+        <input class="w-full" type="text" placeholder="Search" pInputText [(ngModel)]="search" (input)="searchInput($event)"
           (keyup.enter)="searchInvoices()" />
         <span class="flex align-items-center -ml-5 text-gray-600">
           <i *ngIf="!search" class="pi pi-search"></i>
@@ -26,7 +26,7 @@
           <th>Name</th>
           <th>Nationality</th>
           <th>Amount</th>
-          <th>Status</th>
+          <th>Payment Status</th>
           <th>Action</th>
         </tr>
       </ng-template>
@@ -41,7 +41,7 @@
           <td>{{ invoice?.status }}</td>
           <td>
             <p-button label="Pay Now" styleClass="p-button-rounded p-button-sm p-button-secondary"
-              (click)="payNow(invoice)"></p-button>
+              (click)="payNow(invoice)" *ngIf="invoice?.status === 'Pending'"></p-button>
           </td>
         </tr>
       </ng-template>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { API } from '../api';
 import { Invoice } from '../interfaces/invoice';
 import { List } from '../interfaces/list';
@@ -20,6 +21,21 @@ export class InvoiceService {
 
   saveAndPayInvoice(payload: Invoice) {
     return this.http.post(API.invoice.saveAndPay, payload);
+  }
+
+  getMerchantList() {
+    return this.http.get(API.merchant.list);
+  }
+
+  getCentreList() {
+    return this.http.get(API.centre.list);
+  }
+
+  getDropdowns() {
+    return forkJoin([
+      this.getMerchantList(),
+      this.getCentreList()
+    ]);
   }
 
 }

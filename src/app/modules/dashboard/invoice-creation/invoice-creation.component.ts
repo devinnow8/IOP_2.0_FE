@@ -2,17 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Nationality } from '@app/core/interfaces/country';
-import { Invoice } from '@app/core/interfaces/invoice';
-import { RazorpayPayment } from '@app/core/interfaces/payment';
+import { Invoice, Merchant, ProcessingCentre, ProcessingCountry, Service } from '@app/core/interfaces/invoice';
+import { Payment } from '@app/core/interfaces/payment';
 import { InvoiceService } from '@app/core/servcies/invoice.service';
 import { PaymentService } from '@app/core/servcies/payment.service';
 import { Nationalities } from '@app/core/store/nationalities';
 import { MessageService } from 'primeng/api';
 
-interface Dropdown {
-  name: string;
-  value: string;
-}
 
 type InvoiceControls = { [key in keyof Invoice]: FormControl<Invoice[key]> };
 
@@ -24,11 +20,12 @@ type InvoiceControls = { [key in keyof Invoice]: FormControl<Invoice[key]> };
 export class InvoiceCreationComponent implements OnInit {
 
   invoiceForm!: FormGroup<InvoiceControls>;
-  merchant: Dropdown[] = [];
-  services: Dropdown[] = [];
-  countries: Dropdown[] = [];
-  processingCentres: Dropdown[] = [];
+  merchants: Merchant[] = [];
+  services: Service[] = [];
+  countries: ProcessingCountry[] = [];
+  processingCentres: ProcessingCentre[] = [];
   nationalities: Nationality[] = [];
+  currency: string | undefined = '';
 
   constructor(
     private invoiceService: InvoiceService,
@@ -36,23 +33,29 @@ export class InvoiceCreationComponent implements OnInit {
     private messageService: MessageService,
     private paymentService: PaymentService) {
 
-    this.merchant = [
-      { name: 'NIS', value: 'NIS' },
-      { name: 'FRSC', value: 'FRSC' }
-    ];
-
-    this.countries = [
-      { name: 'India', value: 'India' },
-      { name: 'USA', value: 'USA' },
-      { name: 'UK', value: 'UK' }
-    ];
-
     this.nationalities = Nationalities.sort((a, b) => (a.nationality < b.nationality ? -1 : 1));
-    ;
   }
 
   ngOnInit() {
     this.initForm();
+    this.fetchDropdowns();
+
+    // const paymentData: Payment = {
+    //   order_id: '',
+    //   amount: 12,
+    //   name: '',
+    //   contact: '',
+    //   email: ''
+    // }
+    // this.paymentService.payWithStripe(paymentData)
+  }
+
+  fetchDropdowns() {
+    this.invoiceService.getDropdowns()
+      .subscribe((response: any) => {
+        this.merchants = response[0];
+        this.countries = response[1];
+      });
   }
 
   initForm() {
@@ -69,7 +72,9 @@ export class InvoiceCreationComponent implements OnInit {
       service_fee: new FormControl(0, { nonNullable: true }),
       gateway_fee: new FormControl(0, { nonNullable: true }),
       total: new FormControl(0, { nonNullable: true }),
-      mode_of_payment: new FormControl('', { nonNullable: true })
+      mode_of_payment: new FormControl('', { nonNullable: true }),
+      currency: new FormControl('', { nonNullable: true }),
+      invoice_id: new FormControl('', { nonNullable: true })
     });
   }
 
@@ -82,12 +87,21 @@ export class InvoiceCreationComponent implements OnInit {
       return;
     }
     const formData = this.invoiceForm?.value as Invoice;
+    if (formData.total <= 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Invalid Total', detail: 'Total must not be 0' });
+      return;
+    }
     if (event.submitter.id === 'saveAndPay') {
       this.invoiceService.saveAndPayInvoice(formData)
         .subscribe({
           next: (response: any) => {
-            const paymentData: RazorpayPayment = {
+            this.invoiceForm.patchValue({
+              invoice_id: response.invoice_id
+            });
+            const paymentData: Payment = {
               order_id: response.order_id,
+              invoice_id: response.invoice_id,
+              gateway: response.gateway,
               amount: formData.total,
               name: `${formData.applicant_first_name} ${formData.applicant_last_name}`,
               contact: formData.applicant_phone_number,
@@ -108,47 +122,15 @@ export class InvoiceCreationComponent implements OnInit {
   }
 
   changeMerchant(event: any) {
-    if (event.value === 'NIS') {
-      this.services = [
-        { name: 'Passport', value: 'passport' },
-        { name: 'Visa', value: 'visa' },
-        { name: 'VOA', value: 'voa' }
-      ];
-    } else {
-      this.services = [
-        { name: '3 Year DL', value: 'dl_3' },
-        { name: '5 Year DL', value: 'dl_5' }
-      ];
-    }
+    this.services = this.merchants.find((merchant: Merchant) => merchant.merchant === event.value)?.services!;
   }
 
   changeCountry(event: any) {
-    switch (event.value) {
-      case 'India':
-        this.processingCentres = [
-          { name: 'New Delhi', value: 'New Delhi' },
-          { name: 'Mumbai', value: 'Mumbai' },
-          { name: 'Kokata', value: 'Kolkata' },
-          { name: 'Bengaluru', value: 'Bengaluru' }
-        ];
-        break;
-      case 'USA':
-        this.processingCentres = [
-          { name: 'New York', value: 'New York' },
-          { name: 'Chicago', value: 'Chicago' },
-          { name: 'Boston', value: 'Boston' },
-          { name: 'Austin', value: 'Austin' }
-        ];
-        break;
-      case 'UK':
-        this.processingCentres = [
-          { name: 'London', value: 'London' },
-          { name: 'Liverpool', value: 'Liverpool' },
-          { name: 'Manchester', value: 'Manchester' },
-          { name: 'Birmingham', value: 'Birmingham' }
-        ];
-        break;
-    }
+    this.processingCentres = this.countries.find((country: ProcessingCountry) => country.name === event.value)?.centers!;
+    this.currency = event.value == 'India' ? 'INR' : 'USD';
+    this.invoiceForm.patchValue({
+      currency: this.currency
+    });
   }
 
   serviceFeeChange(event: any) {

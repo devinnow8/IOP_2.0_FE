@@ -7,15 +7,15 @@
           <div class="field col-4">
             <label for="merchant">Select Merchant</label>
             <div class="p-fluid">
-              <p-dropdown id="merchant" [options]="merchant" formControlName="merchant" optionLabel="name"
-                (onChange)="changeMerchant($event)" [autoDisplayFirst]="false" optionValue="value"></p-dropdown>
+              <p-dropdown id="merchant" [options]="merchants" formControlName="merchant" optionLabel="merchant"
+                (onChange)="changeMerchant($event)" [autoDisplayFirst]="false" optionValue="merchant"></p-dropdown>
             </div>
           </div>
           <div class="field col-4">
             <label for="merchant_service">Services</label>
             <div class="p-fluid">
               <p-dropdown id="merchant_service" [options]="services" formControlName="merchant_service"
-                optionLabel="name" optionValue="value" [autoDisplayFirst]="false"></p-dropdown>
+                optionLabel="service" optionValue="service" [autoDisplayFirst]="false"></p-dropdown>
             </div>
           </div>
         </div>
@@ -71,14 +71,14 @@
             <div class="p-fluid">
               <p-dropdown id="processing_country" [options]="countries" formControlName="processing_country"
                 optionLabel="name" [autoDisplayFirst]="false" (onChange)="changeCountry($event)"
-                optionValue="value"></p-dropdown>
+                optionValue="name"></p-dropdown>
             </div>
           </div>
           <div class="field col-4">
             <label for="processing_center">Processing Centre</label>
             <div class="p-fluid">
               <p-dropdown id="processing_center" [options]="processingCentres" formControlName="processing_center"
-                optionLabel="name" [autoDisplayFirst]="false" optionValue="value"></p-dropdown>
+                optionLabel="centerName" [autoDisplayFirst]="false" optionValue="centerName"></p-dropdown>
             </div>
           </div>
         </div>
@@ -90,15 +90,21 @@
         <div class="formgrid grid">
           <div class="field col-4">
             <label for="service_fee">Service Fee</label>
-            <input class="w-full" id="service_fee" type="number" min="0" pInputText formControlName="service_fee" (input)="serviceFeeChange($event)" />
+            <input class="w-full" id="service_fee" type="number" min="0" pInputText formControlName="service_fee"
+              (input)="serviceFeeChange($event)" />
           </div>
           <div class="field col-4">
             <label for="gateway_fee">Gateway Fee</label>
-            <input class="w-full" id="gateway_fee" type="number" min="0" pInputText formControlName="gateway_fee" (input)="gatewayFeeChange($event)" />
+            <input class="w-full" id="gateway_fee" type="number" min="0" pInputText formControlName="gateway_fee"
+              (input)="gatewayFeeChange($event)" />
           </div>
           <div class="field col-4">
             <label for="total">Total</label>
-            <input class="w-full no-pointer-events" id="total" type="number" min="0" pInputText formControlName="total" readonly />
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon" *ngIf="currency">{{currency}}</span>
+              <input class="w-full no-pointer-events" id="total" type="number" min="0" pInputText
+                formControlName="total" readonly />
+            </div>
           </div>
         </div>
       </p-panel>
@@ -118,9 +124,17 @@
     </div>
 
     <div class="mt-5">
-      <button pButton type="submit" label="Save" id="save"></button>
-      <button pButton type="submit" label="Save & Pay" id="saveAndPay" class="ml-5"></button>
+      <div class="flex justify-content-between">
+        <div>
+          <button pButton type="submit" label="Save" id="save"></button>
+          <button pButton type="submit" label="Save & Pay" id="saveAndPay" class="ml-4"></button>
+        </div>
+        <button pButton type="button" label="Cancel" id="cancel" class="ml-4 p-button-secondary"
+          routerLink="/dashboard"></button>
+      </div>
     </div>
+
+    <div id="payment-request-button"></div>
 
   </form>
 </div>
