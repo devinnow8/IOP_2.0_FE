@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { MessageService } from 'primeng/api';
@@ -9,30 +8,22 @@ import { Payment, RazorpayOrder } from '../interfaces/payment';
 import { HttpRequestService } from './http-request.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaymentComponent } from '@app/modules/dashboard/shared/payment/payment.component';
-
-function _window(): any {
-  return window;
-}
+import { WindowService } from './window.service';
 
 @Injectable()
 export class PaymentService {
 
   paymentStatus = new BehaviorSubject<boolean>(false);
-  paymentHandler: any = null;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: object,
     private messageService: MessageService,
     private router: Router,
     private http: HttpRequestService,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    private window: WindowService
   ) { }
 
-  get nativeWindow(): any {
-    if (isPlatformBrowser(this.platformId)) {
-      return _window();
-    }
-  }
+
 
   createOrder(payload: any) {
     return this.http.post(API.order.create, payload);
@@ -91,7 +82,7 @@ export class PaymentService {
     options.modal.ondismiss = (() => {
       console.log('Transaction cancelled.');
     });
-    const rzp = new this.nativeWindow.Razorpay(options);
+    const rzp = new this.window.nativeWindow.Razorpay(options);
     rzp.open();
   }
 
@@ -100,49 +91,5 @@ export class PaymentService {
       data: data,
       header: 'Stripe Payment'
   });
-    // this.invokeStripe();
-    // setTimeout(() => {
-    //   const paymentHandler = this.nativeWindow.StripeCheckout.configure({
-    //     key: environment.STRIPE_PK,
-    //     locale: 'auto',
-    //     token: (stripeToken: any) => {
-    //       console.log(stripeToken);
-    //       const payload = {
-    //         signature: stripeToken.id,
-    //         gateway: data.gateway
-    //       }
-    //       this.confirmOrder(payload).subscribe(res => {
-    //         this.paymentStatus.next(true);
-    //       });
-    //       this.router.navigate(['/dashboard']);
-    //     },
-    //   });
-    //   paymentHandler.open({
-    //     name: 'NIS',
-    //     amount: data.amount * 100,
-    //   });
-    // }, 1000);
   }
-
-  // invokeStripe() {
-  //   if (!window.document.getElementById('stripe-script')) {
-  //     const script = window.document.createElement('script');
-
-  //     script.id = 'stripe-script';
-  //     script.type = 'text/javascript';
-  //     script.src = 'https://checkout.stripe.com/checkout.js';
-  //     script.onload = () => {
-  //       this.paymentHandler = this.nativeWindow.StripeCheckout.configure({
-  //         key: environment.STRIPE_PK,
-  //         locale: 'auto',
-  //         token: function (stripeToken: any) {
-  //           console.log(stripeToken);
-  //           alert('Payment has been successfull!');
-  //         },
-  //       });
-  //     };
-
-  //     window.document.body.appendChild(script);
-  //   }
-  // }
 }

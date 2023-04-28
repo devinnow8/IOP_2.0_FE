@@ -1,12 +1,8 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PaymentService } from '@app/core/servcies/payment.service';
+import { WindowService } from '@app/core/servcies/window.service';
 import { environment } from '@env/environment';
 import { MessageService } from 'primeng/api';
-
-function _window(): any {
-  return window;
-}
 
 @Component({
   selector: 'app-payment-success',
@@ -18,9 +14,9 @@ export class PaymentSuccessComponent implements OnInit {
   message: string = '';
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: object,
     private paymentService: PaymentService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private window: WindowService
   ) {
 
   }
@@ -29,24 +25,13 @@ export class PaymentSuccessComponent implements OnInit {
     this.paymentStatus();
   }
 
-  get nativeWindow(): any {
-    if (isPlatformBrowser(this.platformId)) {
-      return _window();
-    }
-  }
-
   paymentStatus() {
-    const stripe = this.nativeWindow.Stripe(environment.STRIPE_PK);
+    const stripe = this.window.nativeWindow.Stripe(environment.STRIPE_PK);
     const clientSecret = new URLSearchParams(window.location.search).get(
       'payment_intent_client_secret'
     );
 
     if (!clientSecret) return;
-
-    const intent: any = new URLSearchParams(window.location.search).get(
-      'payment_intent'
-    );
-    console.log(intent)
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }: any) => {
       console.log(paymentIntent)

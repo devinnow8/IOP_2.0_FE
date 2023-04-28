@@ -1,13 +1,9 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Payment } from '@app/core/interfaces/payment';
+import { WindowService } from '@app/core/servcies/window.service';
 import { environment } from '@env/environment';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-
-function _window(): any {
-  return window;
-}
 
 @Component({
   selector: 'app-payment',
@@ -21,10 +17,10 @@ export class PaymentComponent implements OnInit {
   paymentData!: Payment;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: object,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private window: WindowService
   ) {
     console.log(config)
     this.paymentData = config.data;
@@ -34,19 +30,10 @@ export class PaymentComponent implements OnInit {
     this.init();
   }
 
-  get nativeWindow(): any {
-    if (isPlatformBrowser(this.platformId)) {
-      return _window();
-    }
-  }
-
   init() {
-    this.stripe = this.nativeWindow.Stripe(environment.STRIPE_PK);
+    this.stripe = this.window.nativeWindow.Stripe(environment.STRIPE_PK);
 
     this.stripeElements = this.stripe.elements({
-      // mode: 'payment',
-      // currency: 'usd',
-      // amount: 1099,
       clientSecret: this.paymentData.order_id
     });
     const paymentElement = this.stripeElements.create('payment');
