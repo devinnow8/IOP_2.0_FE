@@ -16,13 +16,18 @@ import { HeaderComponent } from './shared/header/header.component';
 import { InvoiceCreationComponent } from './invoice-creation/invoice-creation.component';
 import { InvoiceService } from '@app/core/servcies/invoice.service';
 import { PaymentService } from '@app/core/servcies/payment.service';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { PaymentComponent } from './shared/payment/payment.component';
+import { PaymentSuccessComponent } from './payment-success/payment-success.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     HeaderComponent,
     LayoutComponent,
-    InvoiceCreationComponent
+    InvoiceCreationComponent,
+    PaymentComponent,
+    PaymentSuccessComponent
   ],
   imports: [
     CommonModule,
@@ -35,10 +40,12 @@ import { PaymentService } from '@app/core/servcies/payment.service';
     PanelModule,
     DropdownModule,
     RadioButtonModule,
-    PaginatorModule
+    PaginatorModule,
+    DynamicDialogModule
   ],
   providers: [
     InvoiceService,
+    DialogService,
     PaymentService
   ]
 })

@@ -7,6 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 import { API } from '../api';
 import { Payment, RazorpayOrder } from '../interfaces/payment';
 import { HttpRequestService } from './http-request.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { PaymentComponent } from '@app/modules/dashboard/shared/payment/payment.component';
 
 function _window(): any {
   return window;
@@ -22,7 +24,8 @@ export class PaymentService {
     @Inject(PLATFORM_ID) private platformId: object,
     private messageService: MessageService,
     private router: Router,
-    private http: HttpRequestService
+    private http: HttpRequestService,
+    public dialogService: DialogService
   ) { }
 
   get nativeWindow(): any {
@@ -35,7 +38,7 @@ export class PaymentService {
     return this.http.post(API.order.create, payload);
   }
 
-  private confirmOrder(payload: any) {
+  confirmOrder(payload: any) {
     return this.http.post(API.order.confirm, payload);
   }
 
@@ -93,72 +96,53 @@ export class PaymentService {
   }
 
   payWithStripe(data: Payment) {
-    this.invokeStripe();
-    setTimeout(() => {
-      const paymentHandler = this.nativeWindow.StripeCheckout.configure({
-        key: environment.STRIPE_PK,
-        locale: 'auto',
-        token: (stripeToken: any) => {
-          console.log(stripeToken);
-          const payload = {
-            signature: stripeToken.id,
-            gateway: data.gateway
-          }
-          this.confirmOrder(payload).subscribe(res => {
-            this.paymentStatus.next(true);
-          });
-          this.router.navigate(['/dashboard']);
-        },
-      });
-      paymentHandler.open({
-        name: 'NIS',
-        amount: data.amount * 100,
-      });
-    }, 1000);
-
-    // const stripe = this.nativeWindow.Stripe(environment.STRIPE_PK);
-    // const paymentRequest = stripe.paymentRequest({
-    //   country: 'US',
-    //   currency: 'usd',
-    //   total: {
-    //     label: 'Demo total',
-    //     amount: 20,
-    //   },
-    //   requestPayerName: true,
-    //   requestPayerEmail: true,
-    // });
-
-    // paymentRequest.canMakePayment().then((result: any) => {
-    //   console.log(result)
-    //   if (result) {
-    //     paymentRequest.show();
-    //   }
-    // });
-
-    // paymentRequest.on('token', (event: any) => {
-    //   console.log(event)
-    // });
+    this.dialogService.open(PaymentComponent, { 
+      data: data,
+      header: 'Stripe Payment'
+  });
+    // this.invokeStripe();
+    // setTimeout(() => {
+    //   const paymentHandler = this.nativeWindow.StripeCheckout.configure({
+    //     key: environment.STRIPE_PK,
+    //     locale: 'auto',
+    //     token: (stripeToken: any) => {
+    //       console.log(stripeToken);
+    //       const payload = {
+    //         signature: stripeToken.id,
+    //         gateway: data.gateway
+    //       }
+    //       this.confirmOrder(payload).subscribe(res => {
+    //         this.paymentStatus.next(true);
+    //       });
+    //       this.router.navigate(['/dashboard']);
+    //     },
+    //   });
+    //   paymentHandler.open({
+    //     name: 'NIS',
+    //     amount: data.amount * 100,
+    //   });
+    // }, 1000);
   }
 
-  invokeStripe() {
-    if (!window.document.getElementById('stripe-script')) {
-      const script = window.document.createElement('script');
+  // invokeStripe() {
+  //   if (!window.document.getElementById('stripe-script')) {
+  //     const script = window.document.createElement('script');
 
-      script.id = 'stripe-script';
-      script.type = 'text/javascript';
-      script.src = 'https://checkout.stripe.com/checkout.js';
-      script.onload = () => {
-        this.paymentHandler = this.nativeWindow.StripeCheckout.configure({
-          key: environment.STRIPE_PK,
-          locale: 'auto',
-          token: function (stripeToken: any) {
-            console.log(stripeToken);
-            alert('Payment has been successfull!');
-          },
-        });
-      };
+  //     script.id = 'stripe-script';
+  //     script.type = 'text/javascript';
+  //     script.src = 'https://checkout.stripe.com/checkout.js';
+  //     script.onload = () => {
+  //       this.paymentHandler = this.nativeWindow.StripeCheckout.configure({
+  //         key: environment.STRIPE_PK,
+  //         locale: 'auto',
+  //         token: function (stripeToken: any) {
+  //           console.log(stripeToken);
+  //           alert('Payment has been successfull!');
+  //         },
+  //       });
+  //     };
 
-      window.document.body.appendChild(script);
-    }
-  }
+  //     window.document.body.appendChild(script);
+  //   }
+  // }
 }

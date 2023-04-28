@@ -42,10 +42,12 @@ export class InvoiceCreationComponent implements OnInit {
 
     // const paymentData: Payment = {
     //   order_id: '',
+    //   invoice_id: '',
     //   amount: 12,
     //   name: '',
     //   contact: '',
-    //   email: ''
+    //   email: '',
+    //   gateway: ''
     // }
     // this.paymentService.payWithStripe(paymentData)
   }
