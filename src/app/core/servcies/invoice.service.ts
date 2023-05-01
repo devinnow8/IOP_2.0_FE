@@ -27,6 +27,10 @@ export class InvoiceService {
     return this.http.get(API.merchant.list);
   }
 
+  getPaymentAttemptList(body: string) {
+    return this.http.get(API.merchant.paymentAttempts(body));
+  }
+
   getCentreList() {
     return this.http.get(API.centre.list);
   }

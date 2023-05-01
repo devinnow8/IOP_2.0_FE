@@ -4,20 +4,18 @@
         <tr>
           <th>Order Id</th>
           <th>Payment Gateway</th>
-          <th>Service Amount</th>
-          <th>Gateway fee</th>
+          <th>Amount</th>
           <th>Status</th>
-          <th>Date Time</th>
+          <th>Date</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-paymentData>
         <tr>
-          <td>{{paymentData.order_id}}</td>
-          <td>{{paymentData.payment_gateway}}</td>
-          <td>{{paymentData.service_amount}}</td>
-          <td>{{paymentData.gateway_fees}}</td>
+          <td>{{paymentData.id}}</td>
+          <td>{{paymentData.gateway}}</td>
+          <td>{{paymentData.amount}}</td>
           <td>{{paymentData.status}}</td>
-          <td>{{paymentData.date_time}}</td>
+          <td>{{paymentData.created_date}}</td>
         </tr>
       </ng-template>
     </p-table>

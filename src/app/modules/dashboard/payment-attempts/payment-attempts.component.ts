@@ -22,7 +22,8 @@ export class PaymentAttempts implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private invoiceService: InvoiceService,
 
   ) {
     this.paymentAttemptsData = [
@@ -62,9 +63,19 @@ export class PaymentAttempts implements OnInit {
     ]
   }
 
+  invoiceList(id: any) {
+    this.invoiceService.getPaymentAttemptList(id)
+      .subscribe({
+        next: (response: any) => {
+         this.paymentAttemptsData = response
+        }
+      });
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     console.log("id", id)
+    this.invoiceList(id)
   }
 
 }

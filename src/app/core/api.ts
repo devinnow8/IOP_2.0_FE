@@ -1,10 +1,10 @@
 export const API = {
   invoice: {
     list: '/invoice/list',
-    getById: (id: number) => `/invoice/${id}`,
+    getById: (id: number) => `/invoice/orderDetails/${id}`,
     update: (id: number) => `/invoice/${id}`,
     save: '/invoice/save',
-    saveAndPay: '/invoice/save/create-order'
+    saveAndPay: '/invoice/save/create-order',
   },
 
   user: {
@@ -20,7 +20,8 @@ export const API = {
   },
 
   merchant: {
-    list: '/merchant-list'
+    list: '/merchant-list',
+    paymentAttempts: (id: string) => `/invoice/orderDetails/${id}`,
   },
 
   centre: {

@@ -31,7 +31,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-invoice>
-        <tr (click)="paymentAttempts(invoice)">
+        <tr>
           <td>{{ invoice?.invoiceId }}</td>
           <td>{{ invoice?.merchant || '--'}}</td>
           <td>{{ invoice?.applicant_first_name || '--' }} {{invoice?.applicant_first_name ? invoice?.applicant_last_name
@@ -42,6 +42,8 @@
           <td>
             <p-button label="Pay Now" styleClass="p-button-rounded p-button-sm p-button-secondary"
               (click)="payNow(invoice)" *ngIf="invoice?.status === 'Pending'"></p-button>
+              <p-button label="Attempts" styleClass="p-button-rounded p-button-sm p-button-primary"
+              (click)="paymentAttempts(invoice)"></p-button>
           </td>
         </tr>
       </ng-template>
