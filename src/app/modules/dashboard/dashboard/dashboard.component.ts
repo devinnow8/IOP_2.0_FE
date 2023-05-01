@@ -5,6 +5,8 @@ import { InvoiceService } from '@app/core/servcies/invoice.service';
 import { PaymentService } from '@app/core/servcies/payment.service';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+
 
 interface InvoiceList extends Invoice {
   invoiceId: string;
@@ -30,7 +32,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private invoiceService: InvoiceService,
     private messageService: MessageService,
-    private paymentService: PaymentService) { }
+    private paymentService: PaymentService,
+    private router: Router,
+    ) { }
 
   ngOnInit() {
     this.invoiceList();
@@ -112,6 +116,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.first = 0;
       this.invoiceList();
     }
+  }
+
+  paymentAttempts(invoice: any) {
+    console.log("paymentAttempts", invoice)
+    this.router.navigate(['/dashboard/payment-attempts', invoice?.invoiceId]);
   }
 
   ngOnDestroy(): void {

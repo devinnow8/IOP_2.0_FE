@@ -19,6 +19,7 @@ import { PaymentService } from '@app/core/servcies/payment.service';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { PaymentComponent } from './shared/payment/payment.component';
 import { PaymentSuccessComponent } from './payment-success/payment-success.component';
+import {PaymentAttempts} from './payment-attempts/payment-attempts.component'
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PaymentSuccessComponent } from './payment-success/payment-success.compo
     LayoutComponent,
     InvoiceCreationComponent,
     PaymentComponent,
-    PaymentSuccessComponent
+    PaymentSuccessComponent,
+    PaymentAttempts
   ],
   imports: [
     CommonModule,

@@ -19,3 +19,12 @@ export interface StripeOrder {
   stripe_payment_id: string;
   stripe_signature: string
 }
+
+export interface PaymentAttemptsTS {
+  order_id: string;
+  payment_gateway: string;
+  service_amount: string;
+  gateway_fees: string;
+  status: string;
+  date_time: string;
+}

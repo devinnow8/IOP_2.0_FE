@@ -31,7 +31,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-invoice>
-        <tr>
+        <tr (click)="paymentAttempts(invoice)">
           <td>{{ invoice?.invoiceId }}</td>
           <td>{{ invoice?.merchant || '--'}}</td>
           <td>{{ invoice?.applicant_first_name || '--' }} {{invoice?.applicant_first_name ? invoice?.applicant_last_name
